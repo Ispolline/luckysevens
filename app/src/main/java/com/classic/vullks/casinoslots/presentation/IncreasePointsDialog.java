@@ -1,4 +1,4 @@
-package com.classic.vullks.casinoslots;
+package com.classic.vullks.casinoslots.presentation;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -14,22 +14,23 @@ import android.view.Window;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.classic.vullks.casinoslots.R;
 import com.google.android.material.card.MaterialCardView;
 
 public class IncreasePointsDialog extends DialogFragment {
     Context context;
     chooseDialogInterface dialogInterface;
-    public IncreasePointsDialog(Context context, chooseDialogInterface dialogInterface){
+
+    public IncreasePointsDialog(Context context, chooseDialogInterface dialogInterface) {
         this.context = context;
-        this.dialogInterface =dialogInterface;
+        this.dialogInterface = dialogInterface;
     }
+
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         Dialog dialog = getDialog();
-        if (dialog != null)
-        {
+        if (dialog != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
@@ -54,7 +55,6 @@ public class IncreasePointsDialog extends DialogFragment {
         });
         return v;
     }
-
 
 
     public void onDismiss(DialogInterface dialog) {

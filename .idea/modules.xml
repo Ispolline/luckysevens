@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CasinoSlots-master.iml" filepath="$PROJECT_DIR$/.idea/modules/CasinoSlots-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/CasinoSlots-master.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/CasinoSlots-master.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/luckysevens1.iml" filepath="$PROJECT_DIR$/.idea/modules/luckysevens1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/luckysevens1.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/luckysevens1.app.iml" />
     </modules>
   </component>
 </project>

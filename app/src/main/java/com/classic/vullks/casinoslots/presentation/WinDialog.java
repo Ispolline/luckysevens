@@ -1,8 +1,9 @@
-package com.classic.vullks.casinoslots;
+package com.classic.vullks.casinoslots.presentation;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -15,25 +16,28 @@ import android.view.Window;
 import androidx.fragment.app.DialogFragment;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.classic.vullks.casinoslots.R;
 
 public class WinDialog extends DialogFragment {
     chooseDialogInterface inter;
     Context context;
-    public WinDialog(){
+
+    public WinDialog() {
     }
+
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         Dialog dialog = getDialog();
-        if (dialog != null)
-        {
+        if (dialog != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
         }
     }
-LottieAnimationView winAnimation;
+
+    LottieAnimationView winAnimation;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_win, null);
@@ -46,12 +50,13 @@ LottieAnimationView winAnimation;
         return v;
     }
 
-
-
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
 
-
+        // Перевод пользователя на авторизацию
+        if(Common.magicChecker == 1){
+            startActivity(new Intent(getActivity(), AuthActivity.class));
+        }
     }
 
     public void onCancel(DialogInterface dialog) {

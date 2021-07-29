@@ -8,5 +8,6 @@
     <color name="col1">#00000000</color>
     <color name="linear">#ffF8B195</color>
     <color name="linear1">#80F8B195</color>
+    <color name="red">#F44336</color>
 
 </resources>

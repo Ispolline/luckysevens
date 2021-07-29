@@ -1,6 +1,7 @@
-package com.classic.vullks.casinoslots;
+package com.classic.vullks.casinoslots.presentation;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,45 +11,66 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ImageView;
 
 import androidx.fragment.app.DialogFragment;
 
-public class BalanceDialog extends DialogFragment {
-    
-    public BalanceDialog() {
+import com.classic.vullks.casinoslots.R;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
+public class question_dialog extends DialogFragment {
+    chooseDialogInterface chooseDialogInterface;
+    Context context;
+
+    public question_dialog(Context context, chooseDialogInterface chooseDialogInterface) {
+        this.context = context;
+        this.chooseDialogInterface = chooseDialogInterface;
     }
+
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         Dialog dialog = getDialog();
-        if (dialog != null)
-        {
+        if (dialog != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             dialog.getWindow().setLayout(width, height);
         }
     }
 
+    ImageView close;
+    SwitchMaterial music, sound;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().setTitle("Title!");
-        View v = inflater.inflate(R.layout.dialog_balance, null);
+        View v = inflater.inflate(R.layout.dialog_question, null);
         final Drawable d = new ColorDrawable(Color.BLACK);
         d.setAlpha(130);
-
         getDialog().getWindow().setBackgroundDrawable(d);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().setCanceledOnTouchOutside(true);
+        music = v.findViewById(R.id.sw_music);
+        sound = v.findViewById(R.id.sw_sounds);
+        music.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                chooseDialogInterface.playMusic();
+            }
+        });
 
+        sound.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                chooseDialogInterface.playSound();
+            }
+        });
+        close = v.findViewById(R.id.iv_close);
+        close.setOnClickListener(v1 -> dismiss());
         return v;
     }
 
 
-
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
+
 
     }
 
