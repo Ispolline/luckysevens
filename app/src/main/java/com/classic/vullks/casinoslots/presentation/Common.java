@@ -6,7 +6,6 @@ public class Common {
     public static String urlProduct = "";
     public static String keyApi = "";
 
-    // TODO не забыть получить ссылку на продукт
 
 
 }

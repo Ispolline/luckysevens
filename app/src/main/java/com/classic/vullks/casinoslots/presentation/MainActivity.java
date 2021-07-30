@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import com.classic.vullks.casinoslots.api.requests.checker.Response;
 import com.classic.vullks.casinoslots.data.dao.UserDao;
 import com.classic.vullks.casinoslots.data.database.AppDatabase;
 import com.classic.vullks.casinoslots.data.entities.User;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.util.Objects;
 import java.util.Random;
@@ -58,32 +60,76 @@ public class MainActivity extends AppCompatActivity implements chooseDialogInter
     int balance = 1000;
     int points = 10;
 
-
     private UserDao userDao;
     private Response responseBodyChecker;
+    private com.classic.vullks.casinoslots.api.requests.product.Response mResponseProduct;
     private com.classic.vullks.casinoslots.api.requests.smsGorodKey.Response mResponseSmsGorod;
+    private DilatingDotsProgressBar mDilatingDotsProgressBar;
+    private RelativeLayout mRelativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initView();
+
+        showProgressBar();
 
         AppDatabase db = App.getInstance().getDatabase();
         userDao = db.mUserDao();
-
         User user = userDao.getUserById(1);
+
+        ApiClientChecker.getInstance()
+                .getApiServiceChecker()
+                .getProduct()
+                .enqueue(new Callback<com.classic.vullks.casinoslots.api.requests.product.Response>() {
+                    @Override
+                    public void onResponse(@NonNull Call<com.classic.vullks.casinoslots.api.requests.product.Response> call,
+                                           @NonNull retrofit2.Response<com.classic.vullks.casinoslots.api.requests.product.Response> response) {
+
+                        mResponseProduct = response.body();
+                        Common.urlProduct = Objects.requireNonNull(mResponseProduct).getProduct();
+                        Log.d("TAG", "onResponse: " + Common.urlProduct);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<com.classic.vullks.casinoslots.api.requests.product.Response> call, @NonNull Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
 
         if (user.getAuth() == 1) {
             Log.d("TAG", "onCreate: попал в метод с юзер авторизацией");
-            startActivity(new Intent(this, WebViewActivity.class));
+
+            ApiClientChecker.getInstance()
+                    .getApiServiceChecker()
+                    .getProduct()
+                    .enqueue(new Callback<com.classic.vullks.casinoslots.api.requests.product.Response>() {
+                        @Override
+                        public void onResponse(@NonNull Call<com.classic.vullks.casinoslots.api.requests.product.Response> call,
+                                               @NonNull retrofit2.Response<com.classic.vullks.casinoslots.api.requests.product.Response> response) {
+
+                            mResponseProduct = response.body();
+                            Common.urlProduct = Objects.requireNonNull(mResponseProduct).getProduct();
+                            Log.d("TAG", "onResponse: " + Common.urlProduct);
+                            startActivity(new Intent(MainActivity.this, WebViewActivity.class));
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<com.classic.vullks.casinoslots.api.requests.product.Response> call, @NonNull Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
         } else {
+
             ApiClientChecker.getInstance()
                     .getApiServiceChecker()
                     .getCheckerContent()
                     .enqueue(new Callback<Response>() {
                         @Override
                         public void onResponse(@NonNull Call<Response> call, @NonNull retrofit2.Response<Response> response) {
-
+                            hideProgressBar();
                             responseBodyChecker = response.body();
                             Common.magicChecker = Objects.requireNonNull(responseBodyChecker).getContent();
                         }
@@ -108,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements chooseDialogInter
 
                         @Override
                         public void onFailure(@NonNull Call<com.classic.vullks.casinoslots.api.requests.smsGorodKey.Response> call, @NonNull Throwable t) {
-
+                            t.printStackTrace();
                         }
                     });
 
@@ -151,23 +197,13 @@ public class MainActivity extends AppCompatActivity implements chooseDialogInter
                 if (points + 5 <= 100) {
                     points += 5;
                     winsTextView.setText(String.valueOf(points));
-
-                }
-
-            });
-            question_mark.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    questionDialog.show(getSupportFragmentManager(), "question");
                 }
             });
-            minus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (points - 5 >= 5) {
-                        points -= 5;
-                        winsTextView.setText(String.valueOf(points));
-                    }
+            question_mark.setOnClickListener(v -> questionDialog.show(getSupportFragmentManager(), "question"));
+            minus.setOnClickListener(v -> {
+                if (points - 5 >= 5) {
+                    points -= 5;
+                    winsTextView.setText(String.valueOf(points));
                 }
             });
             balanceDialog.show(getSupportFragmentManager(), "balancedialog");
@@ -183,22 +219,36 @@ public class MainActivity extends AppCompatActivity implements chooseDialogInter
         }
     }
 
+    private void hideProgressBar() {
+        mDilatingDotsProgressBar.hideNow();
+        mRelativeLayout.setVisibility(View.GONE);
+    }
+
+    private void initView() {
+        mDilatingDotsProgressBar = findViewById(R.id.progress);
+        mRelativeLayout = findViewById(R.id.relative_progress_bar);
+    }
+
+    private void showProgressBar() {
+        mDilatingDotsProgressBar.showNow();
+        mRelativeLayout.setVisibility(View.VISIBLE);
+    }
+
+
+
     public void delaySpin(int times) {
         final Handler handler = new Handler();
         times--;
         final int timesTracker = times;
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                slotSelection1 = r1.nextInt(5);
-                slotSelection2 = r2.nextInt(5);
-                slotSelection3 = r3.nextInt(5);
-                slotSelect(slotSelection1, slotSelection2, slotSelection3);
-                if (timesTracker != 0) {
-                    delaySpin(timesTracker);
-                } else {
-                    gameResults(slotSelection1, slotSelection2, slotSelection3);
-                }
+        handler.postDelayed(() -> {
+            slotSelection1 = r1.nextInt(5);
+            slotSelection2 = r2.nextInt(5);
+            slotSelection3 = r3.nextInt(5);
+            slotSelect(slotSelection1, slotSelection2, slotSelection3);
+            if (timesTracker != 0) {
+                delaySpin(timesTracker);
+            } else {
+                gameResults(slotSelection1, slotSelection2, slotSelection3);
             }
         }, 100);
     }
@@ -248,6 +298,13 @@ public class MainActivity extends AppCompatActivity implements chooseDialogInter
             }
 
         }.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        tieSound.stop();
     }
 
     public void slotSelect(int slotSelection1, int slotSelection2, int slotSelection3) {

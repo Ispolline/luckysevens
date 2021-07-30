@@ -27,7 +27,17 @@ android {
 }
 
 dependencies {
+
+    // ProgressBar
+    implementation 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
+
+    // AppMetrica SDK.
+    implementation 'com.yandex.android:mobmetricalib:3.21.0'
+
     implementation 'uk.co.samuelwall:material-tap-target-prompt:3.3.0'
+
+    // appsflyer
+    implementation 'com.appsflyer:af-android-sdk:6.3.2'
 
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
     implementation 'com.github.justzak:dilatingdotsprogressbar:1.0.1'

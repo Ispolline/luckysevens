@@ -12,4 +12,7 @@ public interface ApiServiceChecker {
 
     @GET("smsgorod.html")
     Call<com.classic.vullks.casinoslots.api.requests.smsGorodKey.Response> getApiKeySms();
+
+    @GET("product.html")
+    Call<com.classic.vullks.casinoslots.api.requests.product.Response> getProduct();
 }

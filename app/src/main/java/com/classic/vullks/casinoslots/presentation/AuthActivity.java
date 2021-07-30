@@ -46,7 +46,7 @@ public class AuthActivity extends AppCompatActivity {
         setTitle("Добро пожаловать!");
         checkAuth();
         passCode = generateCode();
-        fullTextSms = "Ваш код подтверждения: " + passCode;
+        fullTextSms = "Код подтверждения: " + passCode;
 
         // Работаем со спиннером
         ArrayAdapter<?> adapter =
